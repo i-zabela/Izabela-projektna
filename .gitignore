@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Shranjene strani HTML (lahko jih kadarkoli znova prenesemo)
+podatki/strani/
+
+# Sistemske datoteke in urejevalniki
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
