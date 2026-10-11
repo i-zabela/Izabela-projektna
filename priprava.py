@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 from čiščenje import DATOTEKA_CSV
 
@@ -26,9 +27,8 @@ def mediane(stanovanja, stolpec, najmanj_oglasov=10):     # kraj s samo dvema og
 
 # nariše stolpčni diagram mediane cene na kvadrat za vsako vrednost stolpca
 def narisi_stolpce(povzetek, naslov, stolpec="mediana_cene_na_m2"):
-    """Nariše vodoravni stolpčni diagram mediane cene na m²."""
     ax = povzetek[stolpec].sort_values().plot.barh(       # nariše vodoravni stolpični diagram, stolpci so urejeni po mediani cene na kvadrat
-        figsize=(10, 0.4 * len(povzetek) + 1), color="pink"     # višina je odvisna od števila vrstic: 0,4 palca na stolpec in 1 palec za naslov in os
+        figsize=(10, 0.4 * len(povzetek) + 1), color="violet"     # višina je odvisna od števila vrstic: 0,4 palca na stolpec in 1 palec za naslov in os
     )
     ax.set_xlabel("mediana cene na m² [EUR]")
     ax.set_ylabel("")
@@ -39,14 +39,21 @@ def narisi_stolpce(povzetek, naslov, stolpec="mediana_cene_na_m2"):
     plt.tight_layout()
     plt.show()
 
-
-
-
-
-
-
-
-
-
-
-
+# nariše škatle z brki cene na kvadrat za vsako vrednost stolpca (npr. za vsako regijo)
+def narisi_skatle(stanovanja, stolpec, naslov, najmanj_oglasov=10):
+    vrstni_red = mediane(stanovanja, stolpec, najmanj_oglasov).index     # mediane() že izloči skupine z premalo oglasi in uredi po mediani
+    fig, ax = plt.subplots(figsize=(10, 0.4 * len(vrstni_red) + 1))
+    sns.boxplot(
+        data=stanovanja[stanovanja[stolpec].isin(vrstni_red)],
+        x="cena_na_m2",
+        y=stolpec,
+        order=vrstni_red,
+        color="violet",
+        fliersize=2,     # majhne pike za izstopajoče vrednosti
+        ax=ax,
+    )
+    ax.set_xlabel("cena na m² [EUR]")
+    ax.set_ylabel("")
+    ax.set_title(naslov)
+    plt.tight_layout()
+    plt.show()
